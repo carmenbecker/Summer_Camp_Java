@@ -360,4 +360,8 @@ Los modelos generativos del tipo que construirás son de gran interés para los 
 
 <details>
 <Summary>Expande para detalles históricos de esta tarea (opcional)</summary>
+Esta tarea tiene sus raíces en varios lugares: una historia llamada "Inflexible Logic" que se encuentra ahora en las páginas 91-98 de "Fantasia Mathematica" (Google Books).
+Las verdaderas raíces matemáticas provienen de un monólogo de Claude Shannon de 1948, "A Mathematical Theory of Communication" (Una teoría matemática de la comunicación), que trata en detalle las matemáticas y la intuición que hay detrás de esta tarea.
+  
+ </details> 
 
