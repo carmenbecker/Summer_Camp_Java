@@ -14,7 +14,7 @@ También está la versión traducida en español
 - [JUnit Tests](#junit-tests)
 - [Coding Part 1: Developing the WordGram Class](#coding-part-1-developing-the-wordgram-class)
 - [Coding Part 2: Developing the HashMarkov Class](#coding-part-2-developing-the-hashmarkov-class)
-- [Versión traducida en español](#versión-traducida-en-español)
+- [Versión traducida en Español](#versión-traducida-en-español)
 
 
 ## Introduction
@@ -351,17 +351,41 @@ Unlike `BaseMarkov`, Your implementation should *not* loop over the words of the
   
   
   
-## Versión traducida en español
+## Versión traducida en Español
   
-### Introducción
+## Introducción
+  
 Los procesos de `Markov` se utilizan ampliamente en Informática y en el análisis de diferentes formas de datos. Este proyecto ofrece una mirada  divertida a un modelo generativo para crear texto de aspecto realista de una forma basada en datos. Para ello, implementará dos clases: Primero WordGram que representa secuencias inmutables de palabras, luego HashMarkov que será un modelo eficiente para generar texto aleatorio que utiliza WordGrams y HashMaps.
 Los modelos generativos del tipo que construirás son de gran interés para los investigadores en inteligencia artificial y aprendizaje automático en general, y especialmente para aquellos en el campo del procesamiento del lenguaje natural (el uso de técnicas algorítmicas y estadísticas de IA/ML en el lenguaje humano). Un ejemplo reciente y potente de este tipo de modelo de generación de texto mediante un programa de aprendizaje automático estadístico es el GPT-3 de OpenAI.
   
 
 <details>
 <Summary>Expande para detalles históricos de esta tarea (opcional)</summary>
-Esta tarea tiene sus raíces en varios lugares: una historia llamada "Inflexible Logic" que se encuentra ahora en las páginas 91-98 de "Fantasia Mathematica" (Google Books).
-Las verdaderas raíces matemáticas provienen de un monólogo de Claude Shannon de 1948, "A Mathematical Theory of Communication" (Una teoría matemática de la comunicación), que trata en detalle las matemáticas y la intuición que hay detrás de esta tarea.
+Esta tarea tiene sus raíces en varios lugares: una historia llamada `"Inflexible Logic"` que se encuentra ahora en las páginas 91-98 de "Fantasia Mathematica" (Google Books). Las verdaderas raíces matemáticas provienen de un monólogo de `Claude Shannon` de 1948, "A Mathematical Theory of Communication" (Una teoría matemática de la comunicación), que trata en detalle las matemáticas y la intuición que hay detrás de esta tarea.
   
  </details> 
+  
+### Qué es un WordGram
+
+Implementarás una clase llamada `WordGram` que representa una secuencia de palabras (representadas como strings). Así como la clase String de Java es una secuencia inmutable de caracteres, la clase WordGram que implementes será una secuencia inmutable de strings. Inmutable significa que una vez que un objeto WordGram ha sido creado, no puede ser modificado. No se puede cambiar el contenido de un objeto WordGram. Sin embargo, puede crear un nuevo WordGram a partir de un WordGram existente.
+
+
+###¿Qué es un modelo de Markov?
+Los modelos de Markov son modelos aleatorios con la propiedad de Markov. En nuestro caso, queremos crear un modelo de Markov para generar texto aleatorio similar a un texto de entrenamiento. Generaremos una palabra aleatoria cada vez, y la propiedad Markov en nuestro contexto significa que las probabilidades de la siguiente palabra se basarán en las palabras anteriores. Es decir, una palabra sigue a la otra en nuestro texto generado con la misma probabilidad que una palabra sigue a la otra en el texto original. Un modelo de Markov usa WordGrams de orden-k para predecir el texto: a veces los llamamos k-gramas, donde k se refiere al orden. Para empezar, seleccionamos un k-grama aleatorio del texto de entrenamiento (los datos que utilizamos para crear nuestro modelo; queremos generar texto aleatorio similar al texto de entrenamiento). A continuación, buscamos instancias de ese k-grama en el texto de entrenamiento para calcular las probabilidades correspondientes a las palabras que podrían seguirle. Generamos una nueva palabra de acuerdo con estas probabilidades, tras lo cual repetimos el proceso utilizando las últimas k-1 palabras del k-grama anterior y la palabra recién generada. Se continúa así hasta crear el número deseado de palabras aleatorias.
+
+Aquí esta un ejemplo concreto. Supongamos que estamos utilizando un modelo de Markov de orden 2 con el siguiente texto de entrenamiento (ubicado en testfile.txt):
+
+```
+this is a test
+it is only a test
+do you think it is a test
+this test it is ok
+it is short but it is ok to be short
+```
+
+Empezamos con un k-grama aleatorio, supongamos que obtenemos [it, is]. Aparece 5 veces en total, y le siguen only, a, ok, short, y de nuevo ok cada una de esas cinco veces respectivamente. Por lo tanto, la probabilidad (en el texto de entrenamiento) de que sea seguida por ok es de 2/5 o 40%, y para las otras palabras es de 1/5 o 20%. Para generar una palabra aleatoria que siga al 2-grama [it, is], elegiríamos ok con 2/5 de probabilidad, o only, a, o short con 1/5 de probabilidad cada vez.
+En lugar de calcular estas probabilidades explícitamente, su código las utilizará implícitamente. En concreto, el método getFollows devolverá una lista de todas las palabras que siguen a un k-grama dado en el texto de entrenamiento (incluidos los duplicados) y, a continuación, elegirá una de estas palabras uniformemente al azar (random). Las palabras que siguen más a menudamente serán seleccionadas con mayor probabilidad en virtud de estar duplicadas en la Lista.
+Supongamos que elegimos ok como la siguiente palabra aleatoria. Entonces el texto aleatorio generado hasta ahora es ok, y el WordGram actual de orden 2 que estamos utilizando se actualizaría a [is, ok]. Entonces volvemos a encontrar las siguientes palabras en el texto de entrenamiento, y así sucesivamente, hasta que hayamos generado el número deseado de palabras aleatorias.
+Por supuesto, para un texto de entrenamiento muy pequeño estas probabilidades pueden no ser muy significativas, pero los modelos generativos aleatorios como éste pueden ser mucho más potentes cuando se les suministran grandes cantidades de datos de entrenamiento, en este caso significando textos de entrenamiento muy grandes.
+
 
