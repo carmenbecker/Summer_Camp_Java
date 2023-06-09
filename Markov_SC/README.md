@@ -353,5 +353,11 @@ Unlike `BaseMarkov`, Your implementation should *not* loop over the words of the
   
 ## Versión traducida en español
   
+### Introducción
+Los procesos de `Markov` se utilizan ampliamente en Informática y en el análisis de diferentes formas de datos. Este proyecto ofrece una mirada  divertida a un modelo generativo para crear texto de aspecto realista de una forma basada en datos. Para ello, implementará dos clases: Primero WordGram que representa secuencias inmutables de palabras, luego HashMarkov que será un modelo eficiente para generar texto aleatorio que utiliza WordGrams y HashMaps.
+Los modelos generativos del tipo que construirás son de gran interés para los investigadores en inteligencia artificial y aprendizaje automático en general, y especialmente para aquellos en el campo del procesamiento del lenguaje natural (el uso de técnicas algorítmicas y estadísticas de IA/ML en el lenguaje humano). Un ejemplo reciente y potente de este tipo de modelo de generación de texto mediante un programa de aprendizaje automático estadístico es el GPT-3 de OpenAI.
+  
 
+<details>
+<Summary>Expande para detalles históricos de esta tarea (opcional)</summary>
 
