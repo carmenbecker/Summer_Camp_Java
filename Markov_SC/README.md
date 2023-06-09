@@ -370,7 +370,7 @@ Esta tarea tiene sus raíces en varios lugares: una historia llamada `"Inflexibl
 Implementarás una clase llamada `WordGram` que representa una secuencia de palabras (representadas como strings). Así como la clase String de Java es una secuencia inmutable de caracteres, la clase WordGram que implementes será una secuencia inmutable de strings. Inmutable significa que una vez que un objeto WordGram ha sido creado, no puede ser modificado. No se puede cambiar el contenido de un objeto WordGram. Sin embargo, puede crear un nuevo WordGram a partir de un WordGram existente.
 
 
-###¿Qué es un modelo de Markov?
+### ¿Qué es un modelo de Markov?
 Los modelos de Markov son modelos aleatorios con la propiedad de Markov. En nuestro caso, queremos crear un modelo de Markov para generar texto aleatorio similar a un texto de entrenamiento. Generaremos una palabra aleatoria cada vez, y la propiedad Markov en nuestro contexto significa que las probabilidades de la siguiente palabra se basarán en las palabras anteriores. Es decir, una palabra sigue a la otra en nuestro texto generado con la misma probabilidad que una palabra sigue a la otra en el texto original. Un modelo de Markov usa WordGrams de orden-k para predecir el texto: a veces los llamamos k-gramas, donde k se refiere al orden. Para empezar, seleccionamos un k-grama aleatorio del texto de entrenamiento (los datos que utilizamos para crear nuestro modelo; queremos generar texto aleatorio similar al texto de entrenamiento). A continuación, buscamos instancias de ese k-grama en el texto de entrenamiento para calcular las probabilidades correspondientes a las palabras que podrían seguirle. Generamos una nueva palabra de acuerdo con estas probabilidades, tras lo cual repetimos el proceso utilizando las últimas k-1 palabras del k-grama anterior y la palabra recién generada. Se continúa así hasta crear el número deseado de palabras aleatorias.
 
 Aquí esta un ejemplo concreto. Supongamos que estamos utilizando un modelo de Markov de orden 2 con el siguiente texto de entrenamiento (ubicado en testfile.txt):
@@ -387,5 +387,193 @@ Empezamos con un k-grama aleatorio, supongamos que obtenemos [it, is]. Aparece 5
 En lugar de calcular estas probabilidades explícitamente, su código las utilizará implícitamente. En concreto, el método getFollows devolverá una lista de todas las palabras que siguen a un k-grama dado en el texto de entrenamiento (incluidos los duplicados) y, a continuación, elegirá una de estas palabras uniformemente al azar (random). Las palabras que siguen más a menudamente serán seleccionadas con mayor probabilidad en virtud de estar duplicadas en la Lista.
 Supongamos que elegimos ok como la siguiente palabra aleatoria. Entonces el texto aleatorio generado hasta ahora es ok, y el WordGram actual de orden 2 que estamos utilizando se actualizaría a [is, ok]. Entonces volvemos a encontrar las siguientes palabras en el texto de entrenamiento, y así sucesivamente, hasta que hayamos generado el número deseado de palabras aleatorias.
 Por supuesto, para un texto de entrenamiento muy pequeño estas probabilidades pueden no ser muy significativas, pero los modelos generativos aleatorios como éste pueden ser mucho más potentes cuando se les suministran grandes cantidades de datos de entrenamiento, en este caso significando textos de entrenamiento muy grandes.
+
+
+### Running Driver Code
+El `Driver Code` principal para esta tarea se encuentra en `MarkovDriver.java`. Puedes ejecutar el método public static void main de MarkovDriver inmediatamente después de clonar el código de inicio. Te debería salir algo asi. Veras que las frases no tienen mucho sentido ya que se ha generado una palabra random del texto. En este proyecto vamos a intentar mejorar esto. 
+
+```
+Trained on text in data/alice.txt with T=28196 words
+Training time = 0.012 s
+Generated N=100 random words with order 2 Markov Model
+Generating time = 0.014 s
+----------------------------------
+ sorrowful ME' as to an a the with you things ring, deal enough!' ago: this unjust 
+and felt Tortoise explanation; he forgetting WOULD the other it `That's person Duchess 
+broken deal it. was Hare. talking simple old, thoughtfully. last Alice; while next 
+away and held `poison,' the said at under King way?', only with could looking other 
+it came and accidentally it she `and round smile. things children. very YOU copies 
+in `why join to drowned `That had if I much did said: stop introduced or said out 
+beautiful go she thank machine it at morsel beauti--FUL an
+```
+  
+  
+### Pruebas JUnit
+Para ayudar a probar sus implementaciones WordGram y HashMarkov, se le da algunas pruebas unitarias en WordGramTest.java y MarkovTest.java, ambos ubicados en la carpeta src. Una prueba unitaria determina si tu codigo esta correcto. Puede ver las pruebas exactas dentro de los dos archivos. Tenga en cuenta que por defecto (para evitar errores de compilación en el código de arranque), MarkovTest está probando la implementación BaseMarkov. Cuando esté listo para probar su implementación HashMarkov, usted querrá cambiar qué modelo se crea en el método getModel de MarkovTest. 
+La principal ventaja de las pruebas JUnit reside en su capacidad para examinar "unidades" aisladas de código, es decir, para comprobar la corrección de un segmento con una dependencia mínima de otro código y datos relevantes. 
+
+
+
+## 1. Parte 
+
+Su primera tarea es desarrollar la clase WordGram. Se le da un esquema de WordGram.java con las variables de instancia apropiadas declaradas, así como "stubs" (methods no implementados completamente/correctamente).
+Tu tarea será implementar estos métodos en WordGram de acuerdo con las especificaciones dadas. Para las funciones hashCode, equals y toString, tus implementaciones deben ajustarse a las especificaciones dadas en la documentación, link: docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html.
+Tenga en cuenta que los objetos WordGram son inmutables, lo que significa que no deben cambiar después de la creación (similar a Java Strings). Por lo tanto, ninguno de los métodos excepto el constructor debe mutar (o cambiar) las palabras asociadas a un objeto WordGram.
+
+<details>
+<Summary>Constructor</summary>
+Construirás un objeto WordGram pasando como argumentos del constructor: un array, un starting index (índice inicial) y el size (o orden) del WordGram. Guardarás los strings en una variable copiándolos del array pasado.
+Hay tres variables que tienes que meter en WordGram:
+
+private String[] myWords;
+privada String myToString;
+private int myHash;
+
+
+El constructor de WordGram public WordGram(String[] source, int start, int size) debe guardar un numero "size" de Strings del array "Source" empezando en index start. Es decir, empezando en source[start], añade un numero size de Strings a el array myWords que has creado
+Por ejemplo, supongamos que source es el array de abajo, con "this" en el índex 0.
+
+```
+"this"
+"is"
+"a"
+"test"
+"of"
+"the"
+"code"
+```
+
+La llamada new WordGram(source,3,4) debería crear este array myWords ya que el índice inicial es el segundo parámetro, 3, y el tamaño es el tercer parámetro, 4.
+  
+```
+"test"
+"of"
+"the"
+"code"
+```
+
+Puedes inicializar las variables de instancia myToString y myHash en el constructor con los valores por defecto que elijas (ejemplo: myToString = null; myHash = 0;) estos cambiarán cuando implementes los métodos .toString() y .hashCode(), respectivamente.
+  </details>
+
+<details>
+<Summary>wordAy()</summary>  
+El método wordAt() debería devolver la palabra en myWords en el índice indicado.
+  </details>
+
+  <details>
+<Summary>length()</summary>
+El método length() debe devolver el orden del WordGram, es decir, la longitud de myWords.
+  </details>
+
+  <details>
+<Summary>equals()</summary>
+El método equals() debe devolver true cuando el parámetro pasado es un objeto WordGram con las mismas strings en el mismo orden que este objeto.
+La [especificación de la API Java de .equals()](link: https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)  toma un tipo Object como entrada. Por lo tanto, lo primero que debe hacer el método WordGram equals() es comprobar si el parámetro pasado es realmente un WordGram utilizando por ejemplo instanceof ((object1 instanceof object2) y si no devuelve false. En caso contrario, el parámetro puede ser convertido en un WordGram.
+Entonces lo que necesita hacer es comparar las strings en el array myWords de other y this (el objeto sobre el que se llama a equals()). Tenga en cuenta que los objetos WordGram de diferentes longitudes no pueden ser iguales, y su código debe comprobar esto.
+  </details>
+
+<details>
+<Summary>hashCode()</summary>
+El método hashCode() debe devolver un valor de tipo int basado en todos los strings de la variable  myWords. Consulte la documentación de la API de Java para conocer las restricciones de diseño que debe cumplir un método hashCode().
+Tenga en cuenta que la clase String de Java ya tiene un buen método .hashCode() que podemos aprovechar. Utilice el .hashCode() del String devuelto por this.toString() para implementar este método. Con this.toString() estas cojiendo el String de tu objeto para que podamos comparar este. 
+Dado que los objetos WordGram son inmutables (no cambian después de su creación), no es necesario volver a calcular el valor hash cada vez que se llama a .hashCode(). En su lugar, puede calcularlo la primera vez que se llama a .hashCode() (que puede comprobar con cualquier valor por defecto que pueda establecer en el constructor), y almacenar el resultado en la variable de instancia myHash. En llamadas posteriores, simplemente devuelve myHash.
+  </details>
+
+<details>
+<Summary>shiftAdd()</summary>
+Si este WordGram tiene k entradas, entonces el método shiftAdd() debería crear y devolver un nuevo objeto WordGram, también con k entradas, cuyas primeras k-1 entradas son las mismas que las últimas k-1 entradas de este WordGram, y cuya última entrada es el parámetro last. Es decir, "mueves de sitio" las Strings y añades una nueva. Recuerde que los objetos WordGram son inmutables y no pueden modificarse una vez creados - este método debe crear un nuevo objeto WordGram y copiar los valores correctamente para devolverlos al usuario.
+Por ejemplo, si WordGram w es
+
+```
+"apple"
+"pear"
+"cherry"
+```
+
+entonces la llamada al método w.shiftAdd("lemon") debe devolver un nuevo WordGram que contenga {"pear", "cherry", "lemon"}. Tenga en cuenta que este nuevo WordGram no será igual a w.
+Nota: Para implementar shiftAdd() necesitarás crear un nuevo objeto WordGram.
+  </details>
+
+<details>
+<Summary>toString()</summary>
+El método toString() debe devolver un String imprimible que representa todos los strings almacenados myWords, cada uno separado por un único espacio en blanco (es decir, " "). Puede que le resulte útil el método String join, consulte la documentación.
+No es necesario volver a calcular esta cadena cada vez que se llame a toString(); en su lugar, almacene la cadena en la variable de instancia myToString. En llamadas posteriores su código debería simplemente devolver el valor almacenado en myToString (de nuevo usando la inmutabilidad de WordGrams para asegurar que este valor no cambiará). Para determinar si una llamada dada a toString() es la primera, se puede comparar con el valor por defecto del constructor de myToString.
+  </details>
+
+## Testing
+Después de implementar la clase WordGram, puede ejecutar las pruebas JUnit WordGramTest.
+Después de implementar correctamente la clase WordGram, vuelva a ejecutar el MarkovDriver. Con los valores por defecto (TEXT_SIZE = 100, RANDOM_SEED = 1234, MODEL_ORDER = 2, PRINT_MODE = true, y filename = "data/alice.txt") debería ver una salida diferente que cuando ejecutó por primera vez el starter code.
+Te deber de salir esto: 
+
+```
+Trained on text in data/alice.txt with T=28196 words
+Training time = 0.012 s
+Generated N=100 random words with order 2 Markov Model
+Generating time = 0.060 s
+----------------------------------
+Alice; `I daresay it's a set of verses.' `Are they in the distance, and she swam 
+about, trying to touch her. `Poor little thing!' said Alice, `a great girl like you,' 
+(she might well say this), `to go on with the Dutchess, it had made. `He took me 
+for a few minutes to see a little worried. `Just about as it turned a corner, `Oh 
+my ears and whiskers, how late it's getting!' She was close behind it was growing, 
+and very neatly and simply arranged; the only one who had got its head to keep back 
+the wandering hair
+```
+
+Observe en particular cómo las frases parecen estar mejor conectadas que lo que resultaba del código de inicio. Como verá al inspeccionar BaseMarkov, si no puede encontrar un WordGram dado para calcular las posibles palabras siguientes, simplemente genera una palabra aleatoria a partir del texto. Antes, con un constructor incorrecto, equals(), etc., el mensaje de arranque original era sólo palabras aleatorias de Alicia en el País de las Maravillas. Ahora, con una clase WordGram correcta, BaseMarkov está generando la salida del modelo de Markov descrito en la sección introductoria
+
+
+
+## Parte 2 : 
+En esta parte desarrollarás un modelo de Markov para generar texto aleatorio utilizando WordGrams y hashing. En concreto, deberás crear un nuevo file HashMarkov.java con una única clase pública HashMarkov que implemente la MarkovInterface. Si este proceso te parece demasiado dificil, te he creado ya un HashMarkov_Helper para ayudarte. Dependiendo de como de seguro te sientas puedes usar la ayuda o intentarlo tu solo (recomiendo que se intente solo primero).
+Su implementación debe tener el mismo comportamiento que BaseMarkov en términos de implementación de los métodos (es decir tendra los mismos metodos pero tendrá diferentes propiedades de rendimiento debido a la utilización de un HashMap en la formación. En concreto, HashMarkov debe crear una variable de instancia HashMap que mapee WordGrams de un orden dado a Lists de palabras que siguen a ese WordGram. El texto de entrenamiento debe ser leído (en bucle) exactamente una vez durante el método setTraining() para crear este mapa. Posteriormente, el método getFollows() debería simplemente devolver la Lista correspondiente del mapa, o una Lista vacía si no hay ninguna entrada en el mapa, y esto debería usarse en getRandomText() para evitar tener que buscar de nuevo en el texto de entrenamiento cada palabra aleatoria generada.
+Puedes y debes utilizar BaseMarkov como ejemplo de cómo implementar la MarkovInterface, teniendo en cuenta en particular que debes override sus métodos. El método de ayuda privado getNext() no es necesario, pero puedes considerar implementar algo análogo o incluso otros métodos de ayuda privados para mantener tu implementación HashMarkov organizada.
+
+<details>
+<Summary>Instance Variables</summary>
+Necesitará las mismas variables de instancia que en BaseMarkov para guardar las palabras del training text, el random number generator y el orden del modelo. Además, necesitará una HashMap Instance variable  que mapea de WordGrams (las claves) a List<String> (los valores). Recuerda que el objetivo es crear un diccionario. 
+  </details>
+
+<details>
+<Summary>Constructor</summary>
+Debe tener al menos un constructor que tome como input el orden de los WordGrams utilizados en el modelo. Debe inicializar las variables de instancia, de forma similar a BaseMarkov. (Puedes copiar las instance varibales de BaseMarkov) 
+  </details>
+
+<details>
+<Summary>setTraining()</summary>
+De forma similar a BaseMarkov, su método setTraining() debería guardar las palabras del texto de entrenamiento en un Array de Strings. La forma más sencilla es utilizar la llamada al método text.split("\\s+") como se ve en BaseMarkov - la expresión \\s+ se utiliza para dividir en todos los espacios en blanco.
+Además, debe empezar por borrar la variable de instancia HashMap (por ejemplo, si el nombre de la variable es myMap, puede hacerlo llamando a myMap.clear();). Esto asegura que el mapa no contiene datos obsoletos si setTraining() se llama varias veces en diferentes textos de entrenamiento.
+Por último, debe recorrer las palabras del texto de entrenamiento exactamente una vez y, para cada WordGram del orden dado en el texto, añadir todas las palabras que le siguen al valor List<String> correspondiente en su variable de instancia HashMap.
+  </details>
+
+<details>
+<Summary>getFollows()</summary>
+Al igual que en BaseMarkov, el método getFollows toma un objeto WordGram wgram como parámetro y debe devolver una Lista de todas las palabras (representadas como Strings) que siguen a partir de wgram en el texto de entrenamiento. La implementación de HashMarkov debería ser más eficiente, ya que no debería hacer un bucle sobre el texto de entrenamiento, sino que debería simplemente buscar la lista en la variable de instancia HashMap inicializada durante setTraining(), o devolver una lista vacía si wgram no es una clave en el mapa.
+  </details>
+
+<details>
+<Summary>getRandomText()</summary>
+Con este método creas tu texto de tamaño length. Debe utilizar la variable de instancia HashMap establecida durante setTraining() y el método getFollows() para generar length palabras creando un texto aleatorio según el modelo de Markov descrito en la sección de introducción. 
+Puedes usar BaseMarkov como ejemplo para adaptar, por ejemplo, cómo actualizar el WordGram actual, generar en bucle el texto aleatorio, ver cómo usar el generador de números aleatorios para obtener un índice entero aleatorio hasta un cierto límite, etc. Al igual que BaseMarkov, en el caso de que haya un WordGram sin ninguna palabra que le siga (es decir, getFollows() devuelve una lista vacía), deberá elegir una palabra al azar del texto de entrenamiento.
+Tenga en cuenta que tendrá que utilizar el generador de números aleatorios de la misma manera que BaseMarkov, así que siga las llamadas nextInt() de BaseMarkov cuidadosamente. En particular:
+  
+Haga una llamada a nextInt() al principio para obtener el WordGram random inicial,
+Haga una llamada a nextInt() en cada iteración del bucle principal de generación de texto. Necesita obtener o una palabra aleatoria de la lista getFollows, o una palabra aleatoria de todo el texto. Vea el método getNext de BaseMarkov para un ejemplo.
+
+A diferencia de BaseMarkov, su implementación no debe hacer un bucle sobre las palabras del texto de entrenamiento de nuevo cada vez que genera una palabra siguiente.
+  </details>
+ 
+<details>
+<Summary>getOrder() y setSeed()</summary>
+getOrder() es solo un método getter que debe devolver el orden del modelo de Markov, almacenado en una variable de instancia (return getOrder). setSeed() simplemente debe llamar al método setSeed() de la variable de instancia del generador de números aleatorios y pasar la semilla aleatoria correspondiente.
+  </details>
+
+
+## Running and Testing 
+El MarkovDriver establece un RANDOM_SEED para inicializar el generador de números aleatorios. Le invitamos a cambiar ese valor para experimentar y jugar con diferentes generaciones aleatorias de texto, pero debe asegurarse de establecerlo en 1234 para probar. Tenga en cuenta que si usa el mismo valor para RANDOM_SEED debe obtener el mismo texto aleatorio para BaseMarkov y HashMarkov, si no, es probable que algo esté mal con la implementación.
+
+Al igual que Parte 1, también podemos comprobar si nuestros métodos funcionan. También puede probar su clase HashMarkov con las pruebas MarkovTest JUnit. No olvide editar el método getModel de MarkovTest para usar una implementación de HashMarkov al ejecutar sus pruebas.
+
+
 
 
