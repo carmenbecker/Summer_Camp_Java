@@ -14,7 +14,7 @@ También está la versión traducida en español
 - [JUnit Tests](#junit-tests)
 - [Coding Part 1: Developing the WordGram Class](#coding-part-1-developing-the-wordgram-class)
 - [Coding Part 2: Developing the HashMarkov Class](#coding-part-2-developing-the-hashmarkov-class)
-- [Versión traducida en español] (#versión-traducida-en-español)
+- [Versión traducida en español](#versión-traducida-en-español)
 
 
 ## Introduction
