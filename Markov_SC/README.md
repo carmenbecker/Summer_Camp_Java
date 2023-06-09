@@ -1,6 +1,8 @@
 # Project Markov
 
 This is the directions document for Project Markov
+También está la versión traducida en español
+
 
 
 ## Outline
@@ -12,6 +14,7 @@ This is the directions document for Project Markov
 - [JUnit Tests](#junit-tests)
 - [Coding Part 1: Developing the WordGram Class](#coding-part-1-developing-the-wordgram-class)
 - [Coding Part 2: Developing the HashMarkov Class](#coding-part-2-developing-the-hashmarkov-class)
+- [Versión traducida en español] (#versión-traducida-en-español)
 
 
 ## Introduction
@@ -342,3 +345,13 @@ Unlike `BaseMarkov`, Your implementation should *not* loop over the words of the
 `getOrder()` is just a getter method that should return the order of the Markov model, stored in an instance variable. `setSeed()` should simply call the `setSeed()` method of the random number generator instance variable and pass the corresponding random seed.
 
 </details>
+  
+  
+  
+  
+  
+  
+## Versión traducida en español
+  
+
+
