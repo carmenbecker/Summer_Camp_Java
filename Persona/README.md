@@ -25,4 +25,3 @@ En este ejercicio, crearemos una clase llamada Persona. Esta clase contendrá di
 9. Crea un Array con 5 nuevos objetos (que hayas creado tú) junto a los dos objetos facilitados anteriormente.
 10. Crea un diccionario vacío que toma como llave (“key”) y valor (“value”) un String. Recorre el Array creado para añadir al diccionario las ciudades como llaves y las personas correspondientes a cada ciudad como valores. IMPORTANTE: Valores únicos como llaves. Imprime el diccionario al finalizar el bucle.
  EXTRA: calcula edad a partir de la fecha de nacimiento (tendras que encontrar algunas librerías online SIN usar ChatGPT)  
-
