@@ -19,7 +19,7 @@ En este ejercicio, crearemos una clase llamada Persona. Esta clase contendrá di
 ## Ejercicios 
 1. Constructor 
 2. Getters and Setters 
-3. Crea dos objetos diferentes de Persona (Facilitamos: Javier Lopez de Murcia que tiene 80 y María Gonzalez de Barcelona que tiene 10)
+3. Crea dos objetos diferentes de Persona: Javier Lopez de Murcia que tiene 80 y María Gonzalez de Barcelona que tiene 10
 4. Crea una función que reciba como parámetros los dos objetos anteriores y se utilice para saludar una persona a otra mediante el nombre
 5. Función para comprobar mayoría de edad
 6. Función que te devuelve un string con la información de la persona
