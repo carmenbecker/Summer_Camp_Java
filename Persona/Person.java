@@ -3,21 +3,20 @@ package Persona;
 
 public class Person {
 
-    public String firstName, lastName, city;
-    public int age, DNI; 
+    public String myfirstName, mylastName, mycity;
+    public int myage, myDNI; 
 
     //Constructors
 
     //All possible info
     public Person(String firstName, String lastName, int age, String city) {
         //ejemplo con age 
-        this.age = age; 
+        this.myage = age; 
     }
 
-    //Methods
 
     //Get-methods
-    //cambia el return 
+    //cambia el return por los valores correctos  
     public String getName() {
         return "";
     }
@@ -30,8 +29,9 @@ public class Person {
         return "";
     }
 
+
     public int getAge() {
-            return 0; //Return 0 if no age is defined
+            return 0; 
     }
 
     public String getCity() {
@@ -41,7 +41,7 @@ public class Person {
     //Set-methods
     public void setFirstName(String firstName) {
         //ejemplo
-        this.firstName = firstName;
+        this.myfirstName = firstName;
     }
 
     public void setLastName(String lastName) {       
@@ -52,6 +52,5 @@ public class Person {
 
     public void setCity(String city) {
     }
-
-
+    
 }
